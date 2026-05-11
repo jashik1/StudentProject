@@ -4,6 +4,7 @@ from google.cloud import bigquery
 from fastapi.middleware.cors import CORSMiddleware
 
 PROJECT_NUMBER = os.environ.get('PROJECT_NUMBER', '')
+PROJECT_ID = os.environ.get('PROJECT_ID', '')
 
 app = FastAPI()
 
@@ -20,7 +21,7 @@ app.add_middleware(
 )
 
 client_bq = bigquery.Client()
-TEST_DATASET_ID="me-test-project-489908.my_test_dataset"
+TEST_DATASET_ID=f"{PROJECT_ID}.my_test_dataset"
 
 @app.get("/test-data")
 def get_test_data():
