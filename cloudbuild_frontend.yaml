@@ -6,7 +6,7 @@ steps:
       - -c
       - |
         touch ./frontend/.env
-        echo "PROJECT_NUMBER=${_PROJECT_NUMBER}" > ./frontend/.env
+        echo "VITE_PROJECT_NUMBER=${_PROJECT_NUMBER}" > ./frontend/.env
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build docker package'
     args: [
