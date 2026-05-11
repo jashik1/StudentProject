@@ -1,6 +1,7 @@
 import axios from "axios";
+const PROJECT_NUMBER = import.meta.env.VITE_PROJECT_NUMBER;
 
-const url = "https://api-699424466777.europe-west3.run.app";
+const url = `https://api-${PROJECT_NUMBER}.europe-west3.run.app`;
 
 const buildGetPath = (
   endpoint: string,
