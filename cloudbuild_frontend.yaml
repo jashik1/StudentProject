@@ -9,7 +9,7 @@ steps:
       ]
   - name: 'gcr.io/cloud-builders/docker'
     id: 'docker push'
-    args: ['push', '-a', '${_ARTIFACT_REGISTRY_URL}/build']
+    args: ['push', '-a', '${_ARTIFACT_REGISTRY_URL}']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'deploy to cloud run'
     entrypoint: gcloud
