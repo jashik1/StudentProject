@@ -27,7 +27,7 @@ steps:
       ]
 
 images:
-  - '${_ARTIFACT_REGISTRY_URL}/build:${COMMIT_SHA}'
+  - '${_ARTIFACT_REGISTRY_URL}:${COMMIT_SHA}'
 
 options:
   logging: CLOUD_LOGGING_ONLY
