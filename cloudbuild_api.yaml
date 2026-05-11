@@ -25,7 +25,7 @@ steps:
         '--platform',
         'managed',
         '--set-env-vars',
-        'PROJECT_NUMBER=${_PROJECT_NUMBER}',
+        'PROJECT_NUMBER=${_PROJECT_NUMBER},PROJECT_ID=${_PROJECT_ID}',        
         '--allow-unauthenticated'
       ]
 
