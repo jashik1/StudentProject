@@ -1,0 +1,536 @@
+
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #000000;
+    --card-bg: #ffffff;
+    --card-border: #cccccc;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --input-focus-border: #4a90e2;
+    --input-focus-shadow: rgba(74,144,226,0.6);
+    --button-bg: rgb(16, 189, 247);
+    --button-bg-hover: #2aadf4;
+    --button-text: #000000;
+    --modal-backdrop: rgba(0,0,0,0.4);
+    --small-text-color: #666666;
+    --error-text: #c62828;
+    --good-text: #388e3c;
+    --key-bg: #fafafa;
+    --key-bg-hover: #f0f0f0;
+    --key-border: #ddd;
+    --key-text: #222;
+    --key-button-active: #e6e6e6;
+    --elev-1: 0 1px 3px rgba(0,0,0,0.25);
+    --elev-1-hover: 0 3px 6px rgba(0,0,0,0.3);
+    --elev-1-active: 0 1px 2px rgba(0,0,0,0.2);
+    --card-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    --popover-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    --modal-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --button-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    --button-shadow-hover: 0 3px 6px rgba(0,0,0,0.2);
+    --button-shadow-active: 0 1px 2px rgba(0,0,0,0.15);
+    --key-button-shadow-hover: 0 1px 3px rgba(0,0,0,0.15);
+    --age-dropdown-hover: #e6f2ff;
+}
+
+/* dark theme overrides */
+html[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #f2f2f2;
+    --card-bg: #1e1e1e;
+    --card-border: #444;
+    --input-bg: #1e1e1e;
+    --input-border: #555;
+    --input-focus-border: #8ab4ff;
+    --input-focus-shadow: rgba(138,180,255,0.6);
+    --button-bg: #3b82f6;
+    --button-bg-hover: #2563eb;
+    --button-text: #f9fafb;
+    --modal-backdrop: rgba(0,0,0,0.7);
+    --small-text-color: #999999;
+    --error-text: #ef8080;
+    --good-text: #81c784;
+    --key-bg: #2b2b2b;
+    --key-bg-hover: #3a3a3a;
+    --key-border: #555;
+    --key-text: #f5f5f5;
+    --key-button-active: #444;
+    --elev-1: 0 1px 3px rgba(0,0,0,0.7);
+    --elev-1-hover: 0 3px 6px rgba(0,0,0,0.8);
+    --elev-1-active: 0 1px 2px rgba(0,0,0,0.6);
+    --card-shadow:
+        0 2px 6px rgba(0,0,0,0.7),
+        0 0 0 1px rgba(255,255,255,0.04);
+    --popover-shadow:
+        0 2px 6px rgba(0,0,0,0.75),
+        0 0 0 1px rgba(255,255,255,0.05);
+    --modal-shadow:
+        0 2px 12px rgba(0,0,0,0.85),
+        0 0 0 1px rgba(255,255,255,0.06);
+    --button-shadow:
+        0 1px 2px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(255,255,255,0.05);
+    --button-shadow-hover:
+        0 3px 6px rgba(0,0,0,0.8),
+        0 0 0 1px rgba(255,255,255,0.06);
+    --button-shadow-active:
+        0 1px 2px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(255,255,255,0.05);
+    --key-button-shadow-hover:
+        0 1px 3px rgba(0,0,0,0.75),
+        0 0 0 1px rgba(255,255,255,0.05);
+    --age-dropdown-hover: #3a3a3a;
+}
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--button-bg, rgb(16,189,247));
+    color: var(--button-text, #000);
+    font-size: 18px;
+    line-height: 32px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: var(--elev-1);
+    transition: background-color 0.15s ease,
+                transform 0.1s ease,
+                box-shadow 0.15s ease;
+    z-index: 1100;
+}
+
+.theme-toggle:hover {
+    background-color: var(--button-bg-hover, #2aadf4);
+    transform: translateY(-1px);
+    box-shadow: var(--elev-1-hover);
+}
+
+.theme-toggle:active {
+    transform: scale(0.9);
+    box-shadow: var(--elev-1-active);
+}
+body {
+        background: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        position: relative;
+        max-width: 400px;
+        margin: 60px auto;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        padding: 24px 32px;
+        border-radius: 6px;
+        box-shadow: var(--card-shadow);
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+        color: var(--text-color);
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: var(--text-color);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"] {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 14px;
+        font-family: inherit;
+        border: 1px solid var(--input-border);
+        border-radius: 4px;
+        box-sizing: border-box;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="date"]:focus {
+        border-color: var(--input-focus-border);
+        outline: none;
+        box-shadow: 0 0 4px var(--input-focus-shadow);
+        background-color: var(--input-bg);
+    }
+
+    .focus-placeholder::placeholder {
+        color: transparent;
+    }
+
+    .focus-placeholder:focus::placeholder {
+        color: #888;
+    }
+
+    .button-row {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+        box-shadow: var(--button-shadow);
+    }
+
+    button:hover {
+        background-color: var(--button-bg-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--button-shadow-hover);
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: var(--button-shadow-active);
+    }
+
+    .small-text {
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--small-text-color);
+        text-align: center;
+    }
+
+    .confirm-modal {
+        position: fixed;
+        inset: 0;
+        background: var(--modal-backdrop);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .confirm-content {
+        background: var(--card-bg);
+        color: var(--text-color);
+        padding: 20px 24px;
+        border-radius: 6px;
+        border: 1px solid var(--card-border);
+        max-width: 400px;
+        width: 90%;
+        box-shadow: var(--modal-shadow);
+    }
+
+    .confirm-summary {
+        max-height: 250px;
+        overflow-y: auto;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .confirm-summary p {
+        margin: 4px 0;
+        font-weight: normal;
+    }
+
+    .confirm-summary .summary-label {
+        font-weight: 400;
+        color: #333;
+    }
+
+    .confirm-buttons {
+        text-align: center;
+    }
+
+    .confirm-buttons button {
+        margin-left: 8px;
+    }
+    .slot-machine {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    /* Scrambled keyboard styles */
+    .scrambled-keyboard {
+        position: absolute;
+        z-index: 1000;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 8px;
+        border-radius: 6px;
+        box-shadow: var(--popover-shadow);
+        user-select: none;
+        display: none;
+
+        /* animation base state */
+        opacity: 0;
+        transform: translate(-50%, 4px);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .scrambled-keyboard.visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    .scrambled-keyboard button {
+        height: 34px;
+        border: 1px solid var(--key-border);
+        background: var(--key-bg);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0 6px;
+        color: var(--key-text);
+        font-weight: 600;
+        transition: background-color 0.12s ease,
+                    transform 0.08s ease,
+                    box-shadow 0.12s ease;
+    }
+
+    .scrambled-keyboard button:hover {
+        background-color: var(--key-bg-hover);
+        box-shadow: var(--key-button-shadow-hover);
+    }
+
+    .scrambled-keyboard button:active {
+        background-color: var(--key-button-active);
+        transform: scale(0.95);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+
+    .scrambled-keyboard .wide {
+        grid-column: span 2;
+    }
+
+    .type-scrambled-keyboard {
+        caret-color: auto;
+    }
+
+.birth-hilo {
+    margin-top: 8px;
+}
+.hilo-buttons {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.hilo-message {
+    font-size: 12px;
+    margin-top: 4px;
+    color: var(--small-text-color);
+    text-align: left;
+}
+
+.phone-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.phone-prefix {
+    padding: 8px 6px;
+    font-size: 14px;
+    color: var(--text-color);
+    user-select: none;
+}
+
+.phone-wrapper input[type="text"] {
+    flex: 1;
+}
+.age-dropdown-wrapper {
+    position: relative;
+    font-size: 14px;
+}
+
+.age-options {
+    position: absolute;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    color: var(--text-color);
+    max-height: 50px;
+    overflow-y: auto;
+    display: none;
+    z-index: 10;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: var(--popover-shadow);
+}
+
+.age-option-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--text-color);
+}
+
+.age-option-item:hover {
+    background: var(--age-dropdown-hover);
+}
+
+.age-options::-webkit-scrollbar {
+    width: 4px;
+}
+.age-options::-webkit-scrollbar-thumb {
+    background: rgba(136,136,136,0.7);
+}
+/* Slot machine message under the SPIN button */
+.age-slot-message {
+    font-size: 12px;
+    margin-top: 4px;
+    color: var(--small-text-color);
+}
+
+/* Age Hi/Lo wrapper margin */
+.age-hilo {
+    margin-top: 8px;
+}
+
+/* Birth Hi/Lo wrapper margin (from above) */
+.birth-hilo {
+    margin-top: 8px;
+}
+
+/* Age dropdown spacing */
+.age-dropdown-wrapper {
+    position: relative;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.one-letter-keyboard {
+    position: absolute;
+    z-index: 1000;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 8px;
+    border-radius: 6px;
+    box-shadow: var(--popover-shadow);
+    user-select: none;
+    display: none;
+    font-size: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    /* animation base state */
+    opacity: 0;
+    transform: translate(-50%, 4px); /* centered horizontally; slight down */
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.one-letter-keyboard.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.one-letter-keyboard button {
+    height: 34px;
+    border: 1px solid var(--key-border);
+    background: var(--key-bg);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 8px;
+    color: var(--button-text);
+    font-weight: 600;
+    transition: background-color 0.12s ease,
+                transform 0.08s ease,
+                box-shadow 0.12s ease;
+}
+
+.one-letter-keyboard button:hover {
+    background-color: var(--key-bg-hover);
+    box-shadow: var(--key-button-shadow-hover);
+}
+
+.one-letter-keyboard button:active {
+    background-color: var(--key-button-active);
+    transform: scale(0.95);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.olk-letter {
+    display: inline-block;
+    min-width: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 0 4px;
+    font-size: 18px;
+}
+#olk-shift.active {
+    background-color: var(--key-button-active);
+}
+
+/* Map wrapper spacing */
+#address-map-wrapper {
+    margin-top: 8px;
+}
+
+/* Map size */
+#map {
+    width: 100%;
+    height: 250px;
+}
+
+/* Help text under the map */
+.address-map-help {
+    font-size: 12px;
+    color: var(--small-text-color);
+    margin-top: 4px;
+}
+
+.confirm-error {
+    color: var(--error-text);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+.username-error {
+    color: var(--error-text);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+.username-good {
+    color: var(--good-text);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+.username-info {
+    color: var(--small-text-color);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}

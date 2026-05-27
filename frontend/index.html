@@ -1,13 +1,83 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <title>It could be worse</title>
+    <link rel="stylesheet" href="css/style-index.css">
+</head>
+<body>
+    <button id="themeToggle" class="theme-toggle" title="Toggle light/dark">☾</button>
+    <button id="infoButton" class="info-button" title="What is this?">i</button>
+
+ <div id="infoPanel" class="info-panel" style="display:none;">
+    <div class="info-panel-content">
+        <h2>Info</h2>
+        <div id="infoText">
+        </div>
+    </div>
+</div>
+
+    <h1 class="falling-title">
+        <span class="l1">I</span>
+        <span class="l2">t</span>
+        <span class="l3"> </span>
+        <span class="l4">c</span>
+        <span class="l5">o</span>
+        <span class="l6">u</span>
+        <span class="l7">l</span>
+        <span class="l8">d</span>
+        <span class="l9"> </span>
+        <span class="l10">b</span>
+        <span class="l11">e</span>
+        <span class="l12"> </span>
+        <span class="l13">w</span>
+        <span class="l14">o</span>
+        <span class="l15">r</span>
+        <span class="l16">s</span>
+        <span class="l17">e</span>
+    </h1>
+
+    <button id="registerButton" title="Click to play">
+        <span class="falling-button-text">
+            <span class="t1 d1">P</span>
+            <span class="t2 d2">L</span>
+            <span class="t3 d3">A</span>
+            <span class="t4 d4">Y</span>
+        </span>
+    </button>
+
+    <div id="loginModal" class="login-modal" style="display:none;">
+    <div class="login-modal-backdrop"></div>
+    <div class="login-modal-content">
+        <h2>Login required</h2>
+        <p>You need an account to play this game.</p>
+
+        <form id="loginForm">
+            <div class="login-field">
+                <label for="loginEmail">Email</label>
+                <input type="text" id="loginEmail" placeholder="Enter your email">
+            </div>
+            <div class="login-field">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password">
+            </div>
+            <div class="login-error" id="loginError" style="display:none;">
+                Login failed. Please try again.
+            </div>
+            <div class="login-buttons">
+                <button type="submit">Log in</button>
+                <button type="button" id="loginClose">Cancel</button>
+            </div>
+        </form>
+
+        <p class="login-register-text login-register-bottom">
+            <span id="gotoRegister">Click to register</span>
+        </p>
+    </div>
+</div>
+
+<script src="js/theme.js"></script>
+<script src="js/main-index.js"></script>
+
+</body>
 </html>
