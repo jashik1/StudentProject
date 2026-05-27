@@ -1,26 +1,13 @@
-FROM node:24 AS builder
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-
-RUN npm ci
-
-COPY . .
-
-RUN npm run build
-
+# Use a lightweight nginx image
 FROM nginx:alpine
 
+# Remove default nginx site
 RUN rm -rf /usr/share/nginx/html/*
 
-# Debug: show files in build context root
-RUN echo "Listing working directory:" && ls -la
+# Copy your static files into nginx HTML directory
+COPY frontend/ /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/nginx.conf
+# Expose port 80
+EXPOSE 80
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-EXPOSE 8080
-
-CMD ["nginx", "-g", "daemon off;"]
+# nginx default CMD is fine
