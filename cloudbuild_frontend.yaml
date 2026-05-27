@@ -1,19 +1,19 @@
 steps:
-  # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
-        'build', '-t', '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}', '.'
+        'build',
+        '-t', '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}',
+        'frontend'
       ]
 
-  # Step 2: Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
-        'push', '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}'
+        'push',
+        '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}'
       ]
 
-  # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -28,5 +28,6 @@ steps:
 
 images:
   - '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}'
+
 options:
   logging: CLOUD_LOGGING_ONLY
