@@ -1,42 +1,30 @@
 steps:
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'set .env file'
-    entrypoint: bash
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
     args:
-      - -c
-      - |
-        touch ./frontend/.env
-        echo "VITE_PROJECT_NUMBER=${PROJECT_NUMBER}" > ./frontend/.env
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'build docker package'
-    args: [
-        'build',
-        '-t',
-        '${_ARTIFACT_REGISTRY_URL}/frontend:${COMMIT_SHA}',
-        './frontend'
+      [
+        'build', '-t', '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}', '.'
       ]
+
+  # Step 2: Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'docker push'
-    args: ['push', '-a', '${_ARTIFACT_REGISTRY_URL}/frontend']
+    args:
+      [
+        'push', '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}'
+      ]
+
+  # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: 'deploy to cloud run'
     entrypoint: gcloud
     args:
       [
-        'run',
-        'deploy',
-        'frontend',
-        '--image',
-        '${_ARTIFACT_REGISTRY_URL}/frontend:${COMMIT_SHA}',
-        '--region',
-        'europe-west3',
-        '--platform',
-        'managed',
-        '--allow-unauthenticated'
+        'run', 'deploy', 'static-frontend',
+        '--image', '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}',
+        '--platform', 'managed',
+        '--region', 'europe-west3',
+        '--allow-unauthenticated',
+        '--port', '80'
       ]
 
 images:
-  - '${_ARTIFACT_REGISTRY_URL}/frontend:${COMMIT_SHA}'
-
-options:
-  logging: CLOUD_LOGGING_ONLY
+  - '${_ARTIFACT_REGISTRY_URL}/static-frontend:${SHORT_SHA}'
