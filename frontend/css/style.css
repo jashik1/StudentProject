@@ -565,7 +565,7 @@ body {
 .address-map-help {
     font-size: 12px;
     color: var(--small-text-color);
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .confirm-error {

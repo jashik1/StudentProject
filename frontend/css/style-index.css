@@ -19,7 +19,7 @@
 /* #dbdbd2
 
 /* dark theme overrides */
-body[data-theme="dark"] {
+html[data-theme="dark"] {
     --bg-color: #121212;
     --text-color: #f2f2f2;
     --card-bg: #1e1e1e;

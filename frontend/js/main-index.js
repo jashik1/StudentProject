@@ -1,3 +1,26 @@
+let presentationRequested = false;
+
+document.addEventListener('keydown', (e) => {
+    // Ignore if typing in form fields
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+        return;
+    }
+
+    if (e.key.toLowerCase() !== 'p') return;
+
+    // Toggle presentation mode flag
+    presentationRequested = !presentationRequested;
+
+    // Update the "Click to register" label
+    const gotoRegisterEl = document.getElementById('gotoRegister');
+    if (gotoRegisterEl) {
+        const base = 'Click to register';
+        gotoRegisterEl.textContent = presentationRequested ? base + '*' : base;
+    }
+
+    console.log('[Presentation toggle]', presentationRequested ? 'ON' : 'OFF');
+});
 // Keys for localStorage
 const INFO_STATE_KEY = 'ikbw_info_state'; // "It could be worse" info state
 const HAS_PLAYED_KEY = 'ikbw_has_played';
@@ -322,7 +345,10 @@ if (loginCloseBtn) {
 // Click to register goes to game.html
 if (gotoRegister) {
     gotoRegister.addEventListener('click', () => {
-        window.location.href = 'game.html';
+        const url = presentationRequested
+            ? 'game.html?presentation=1'
+            : 'game.html';
+        window.location.href = url;
     });
 }
 

@@ -327,63 +327,51 @@ const fieldTypes = [
     }
 ];
 
+// Detect presentation mode from URL
+function isPresentationModeFromUrl() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('presentation') === '1';
+    } catch (e) {
+        return false;
+    }
+}
+
+// Global flag
+window.PRESENTATION_MODE = isPresentationModeFromUrl();
+console.log('[PRESENTATION_MODE]', window.PRESENTATION_MODE ? 'ON' : 'OFF');
+
 window.assignedTypes = {};
 const assignedTypes = window.assignedTypes;
 
-// Minimal random assignment (no validation logic yet)
-function assignRandomTypes() {
-    Object.keys(gameFields).forEach(fieldId => {
-        const input = gameFields[fieldId];
-        if (!input) return;
 
-        // Find all types allowed on this field
-        const possibleTypes = fieldTypes.filter(t => t.allowedOn.includes(fieldId));
-        if (possibleTypes.length === 0) {
-            return; // no mini-game for this field
+function applyTypeForField(fieldId, chosenType, input) {
+    // Scrambled keyboard
+    if (chosenType.key === 'scrambledKeyboard') {
+        if (window.scrambledKeyboardAttach) {
+            window.scrambledKeyboardAttach(input);
         }
+    }
 
-        // Pick one at random
-        const randomIndex = Math.floor(Math.random() * possibleTypes.length);
-        const chosenType = possibleTypes[randomIndex];
-
-        // Save assignment
-        assignedTypes[fieldId] = chosenType;
-
-        // Apply placeholder and CSS class
-        input.placeholder = chosenType.placeholder;
-        input.classList.add(chosenType.cssClass);
-
-        // Scrambled keyboard
-        if (chosenType.key === 'scrambledKeyboard') {
-            if (window.scrambledKeyboardAttach) {
-                window.scrambledKeyboardAttach(input);
-            }
-        }
-
-        // Morse code
-        if (chosenType.key === 'morseCode') {
+    // Morse code
+    if (chosenType.key === 'morseCode') {
+        if (isMobile && window.attachMorseKeyboard) {
+            window.attachMorseKeyboard(input);
+        } else {
             input.addEventListener('keydown', function (e) {
-                // allow navigation and control keys
                 const allowedCtrl = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Home', 'End'];
                 if (allowedCtrl.includes(e.key)) return;
-                if (e.ctrlKey || e.metaKey || e.altKey) return; // allow shortcuts
-
-                // allow dot, dash, space
-                if (e.key === '.' || e.key === '-' || e.key === ' ') {
-                    return;
-                }
-
-                // block everything else
+                if (e.ctrlKey || e.metaKey || e.altKey) return;
+                if (e.key === '.' || e.key === '-' || e.key === ' ') return;
                 e.preventDefault();
             });
-
-            // prevent paste of random text (optional evil)
             input.addEventListener('paste', function (e) {
                 e.preventDefault();
             });
         }
+    }
 
-        // Gambling
+    // Gambling
         if (fieldId === 'age' && chosenType.key === 'gambling') {
             const slotMachine = document.getElementById('age-slot-machine');
             const spinBtn = document.getElementById('slot-spin');
@@ -533,6 +521,9 @@ function assignRandomTypes() {
                     }
                 });
             }
+                input.addEventListener('paste', function (e) {
+                e.preventDefault();
+            });
         }
 
         // Morse code
@@ -679,7 +670,7 @@ function assignRandomTypes() {
                 const btnLeft = document.getElementById('olk-left');
                 const btnRight = document.getElementById('olk-right');
                 const btnOk = document.getElementById('olk-ok');
-                const btnShift = document.getElementById('olk-shift'); // NEW
+                const btnShift = document.getElementById('olk-shift');
                 const letterSpan = document.getElementById('olk-letter');
                 const container = document.querySelector('.container');
 
@@ -851,8 +842,9 @@ function assignRandomTypes() {
                 });
             })();
         }
+    }
 
-        // --- Mobile binary/morse keyboards ---
+// --- Mobile binary/morse keyboards ---
 
         (function () {
             const isMobile =
@@ -1019,11 +1011,72 @@ function assignRandomTypes() {
             });
         })();
 
-    })();// end forEach
-} // end assignRandomTypes
+// Minimal random assignment (no validation logic yet)
+function assignRandomTypes() {
+    Object.keys(gameFields).forEach(fieldId => {
+        const input = gameFields[fieldId];
+        if (!input) return;
 
-// Run on page load
-assignRandomTypes();
+        const possibleTypes = fieldTypes.filter(t => t.allowedOn.includes(fieldId));
+        if (possibleTypes.length === 0) {
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * possibleTypes.length);
+        const chosenType = possibleTypes[randomIndex];
+
+        assignedTypes[fieldId] = chosenType;
+        input.placeholder = chosenType.placeholder;
+        input.classList.add(chosenType.cssClass);
+
+        applyTypeForField(fieldId, chosenType, input);
+    });
+}
+
+function getTypeByKey(key) {
+    return fieldTypes.find(t => t.key === key) || null;
+}
+
+function assignPresentationTypes() {
+    // Clear any previous assignments
+    Object.keys(assignedTypes).forEach(k => delete assignedTypes[k]);
+
+    // Small helper to assign a specific type to a specific field
+    function assignExact(fieldId, typeKey) {
+        const t = getTypeByKey(typeKey);
+        if (!t) {
+            console.warn('Presentation: type not found', typeKey);
+            return;
+        }
+        if (!t.allowedOn.includes(fieldId)) {
+            console.warn(`Presentation: type "${typeKey}" not allowed on "${fieldId}"`);
+            return;
+        }
+        const input = gameFields[fieldId];
+        if (!input) return;
+
+        assignedTypes[fieldId] = t;
+        input.placeholder = t.placeholder;
+        input.classList.add(t.cssClass);
+
+        applyTypeForField(fieldId, t, input);
+    }
+
+    // Now choose what you want for the demo:
+    assignExact('address', 'mapZoom');      
+    assignExact('age', 'gambling');               
+    assignExact('birthDate', 'higherLowerBirthDate');  
+    assignExact('username', 'scrambledKeyboard');
+    assignExact('firstName', 'oneLetterKeyboard');
+    assignExact('lastName', 'oldPhoneKeypad');
+    assignExact('gender', 'morseCode');
+    assignExact('phoneNumber', 'numbersByWords');
+    assignExact('email', 'binaryCode');
+    assignExact('recoveryEmail', 'binaryCode');      
+    assignExact('password', 'scrambledKeyboard'); 
+
+    console.log('[Presentation] Assigned types:', JSON.stringify(assignedTypes, null, 2));
+}
 
 function applyMobileReadOnlyRules() {
     if (!isMobile) return;
@@ -1058,6 +1111,10 @@ function applyMobileReadOnlyRules() {
 }
 
 // Run on page load
-assignRandomTypes();
+if (window.PRESENTATION_MODE && typeof assignPresentationTypes === 'function') {
+    assignPresentationTypes();
+} else {
+    assignRandomTypes();
+}
 console.log('Assigned types:', JSON.stringify(window.assignedTypes, null, 2));
 applyMobileReadOnlyRules();
