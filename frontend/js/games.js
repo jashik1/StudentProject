@@ -13,6 +13,7 @@ const gameFields = {
     confirmPassword: document.getElementById('confirmPassword')
     // ^^ deprecated, we have confirmPassword1–9 now
 };
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 // Define confirm password segments and their available types
 const confirmPasswordSegments = [
     { fields: [1], typeKey: null },      // Segment 1: fields 1-3
@@ -287,7 +288,7 @@ const fieldTypes = [
     {
         key: 'binaryCode',
         allowedOn: ['username', 'firstName', 'lastName', 'gender', 'password', 'phoneNumber', 'email', 'recoveryEmail', 'age'],
-        placeholder: 'Enter text using Binary code (0 and 1 only)',
+        placeholder: 'Enter text as ASCII binary (0 and 1 only)',
         cssClass: 'type-binary-code'
     },
 
@@ -514,18 +515,38 @@ function assignRandomTypes() {
 
         // Binary code
         if (chosenType.key === 'binaryCode') {
-            input.addEventListener('keydown', function (e) {
-                // allow control keys
-                if (['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(e.key)) {
-                    return;
-                }
+            if (isMobile && window.attachBinaryKeyboard) {
+                window.attachBinaryKeyboard(input);
+            } else {
+                // desktop behavior: block everything except 0/1/control keys
+                input.addEventListener('keydown', function (e) {
+                    if (['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(e.key)) {
+                        return;
+                    }
+                    if (e.key !== '0' && e.key !== '1') {
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
 
-                // only allow 0 and 1
-                if (e.key !== '0' && e.key !== '1') {
+        // Morse code
+        if (chosenType.key === 'morseCode') {
+            if (isMobile && window.attachMorseKeyboard) {
+                window.attachMorseKeyboard(input);
+            } else {
+                // your existing desktop morse logic:
+                input.addEventListener('keydown', function (e) {
+                    const allowedCtrl = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Home', 'End'];
+                    if (allowedCtrl.includes(e.key)) return;
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
+                    if (e.key === '.' || e.key === '-' || e.key === ' ') return;
                     e.preventDefault();
-                }
-
-            });
+                });
+                input.addEventListener('paste', function (e) {
+                    e.preventDefault();
+                });
+            }
         }
 
         // Higher / Lower for age
@@ -825,6 +846,168 @@ function assignRandomTypes() {
                 });
             })();
         }
+
+        // --- Mobile binary/morse keyboards ---
+
+        (function () {
+            const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+            if (!isMobile) return; // only do this on mobile
+
+            const container = document.querySelector('.container');
+            const binaryWidget = document.getElementById('binary-keyboard');
+            const morseWidget = document.getElementById('morse-keyboard');
+
+            if (!container || !binaryWidget || !morseWidget) {
+                console.warn('Mini keyboards not found in DOM.');
+                return;
+            }
+
+            let currentInput = null;
+            let currentWidget = null;
+
+            function positionWidget(widget, input) {
+                const inputRect = input.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+
+                const top = inputRect.bottom - containerRect.top + 4;
+                const left = (inputRect.left + inputRect.right) / 2 - containerRect.left;
+
+                widget.style.top = top + 'px';
+                widget.style.left = left + 'px';
+            }
+
+            function showWidget(widget, input) {
+                currentInput = input;
+                currentWidget = widget;
+                positionWidget(widget, input);
+                widget.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    widget.classList.add('visible');
+                });
+            }
+
+            function hideWidget(widget) {
+                widget.classList.remove('visible');
+                setTimeout(() => {
+                    if (!widget.classList.contains('visible')) {
+                        widget.style.display = 'none';
+                    }
+                }, 200);
+                if (currentWidget === widget) {
+                    currentWidget = null;
+                    currentInput = null;
+                }
+            }
+
+            function insertAtCursor(input, text) {
+                const start = input.selectionStart ?? input.value.length;
+                const end = input.selectionEnd ?? input.value.length;
+                input.value = input.value.slice(0, start) + text + input.value.slice(end);
+                const newPos = start + text.length;
+                input.setSelectionRange(newPos, newPos);
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            function handleButtonClick(key) {
+                if (!currentInput) return;
+
+                if (key === 'backspace') {
+                    const start = currentInput.selectionStart ?? currentInput.value.length;
+                    const end = currentInput.selectionEnd ?? currentInput.value.length;
+                    if (start === end && start > 0) {
+                        // delete previous char
+                        currentInput.value =
+                            currentInput.value.slice(0, start - 1) +
+                            currentInput.value.slice(end);
+                        const newPos = start - 1;
+                        currentInput.setSelectionRange(newPos, newPos);
+                    } else {
+                        // delete selection
+                        currentInput.value =
+                            currentInput.value.slice(0, start) +
+                            currentInput.value.slice(end);
+                        currentInput.setSelectionRange(start, start);
+                    }
+                    currentInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    currentInput.focus();
+                    return;
+                }
+
+                if (key === 'clear') {
+                    currentInput.value = '';
+                    currentInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    currentInput.focus();
+                    return;
+                }
+
+                if (key === 'close') {
+                    hideWidget(currentWidget);
+                    currentInput.blur();
+                    return;
+                }
+
+                // normal character
+                insertAtCursor(currentInput, key);
+                currentInput.focus();
+            }
+
+            function wireWidget(widget) {
+                widget.addEventListener('mousedown', e => e.preventDefault()); // prevent focus loss
+                widget.addEventListener('click', e => {
+                    const btn = e.target.closest('button[data-key]');
+                    if (!btn) return;
+                    const key = btn.dataset.key;
+                    handleButtonClick(key);
+                });
+            }
+
+            wireWidget(binaryWidget);
+            wireWidget(morseWidget);
+
+            // public attachers
+            window.attachBinaryKeyboard = function (input) {
+                if (!isMobile) return;
+                // prevent native typing
+                input.readOnly = true;
+                input.addEventListener('focus', () => {
+                    showWidget(binaryWidget, input);
+                });
+                input.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        // hide only if focus isn't on widget
+                        const active = document.activeElement;
+                        if (!binaryWidget.contains(active)) {
+                            hideWidget(binaryWidget);
+                        }
+                    }, 0);
+                });
+            };
+
+            window.attachMorseKeyboard = function (input) {
+                if (!isMobile) return;
+                input.readOnly = true;
+                input.addEventListener('focus', () => {
+                    showWidget(morseWidget, input);
+                });
+                input.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        const active = document.activeElement;
+                        if (!morseWidget.contains(active)) {
+                            hideWidget(morseWidget);
+                        }
+                    }, 0);
+                });
+            };
+
+            // reposition on rotate/resize
+            window.addEventListener('resize', () => {
+                if (currentWidget && currentInput) {
+                    positionWidget(currentWidget, currentInput);
+                }
+            });
+        })();
+
     })();// end forEach
 } // end assignRandomTypes
 

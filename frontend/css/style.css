@@ -489,6 +489,30 @@ body {
     background-color: var(--key-button-active);
 }
 
+.mini-keyboard {
+    position: absolute;
+    display: none;
+    background: var(--bg, #222);
+    color: #fff;
+    padding: 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    gap: 4px;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.mini-keyboard.visible {
+    display: flex;
+}
+
+.mini-keyboard button {
+    margin: 0 2px;
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
 /* Map wrapper spacing */
 #address-map-wrapper {
     margin-top: 8px;
