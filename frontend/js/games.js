@@ -447,6 +447,9 @@ function assignRandomTypes() {
                     '0': [' ', '0']
                 };
 
+                input.setAttribute('inputmode', 'numeric');
+                input.setAttribute('pattern', '[0-9]*');
+
                 let lastKey = null;
                 let lastTime = 0;
                 let pressIndex = 0;
@@ -1021,3 +1024,40 @@ function assignRandomTypes() {
 
 // Run on page load
 assignRandomTypes();
+
+function applyMobileReadOnlyRules() {
+    if (!isMobile) return;
+    if (!window.assignedTypes) return;
+
+    // Types that should *not* allow direct typing on mobile
+    const blockTypingTypes = new Set([
+        'scrambledKeyboard',
+        'morseCode',
+        'binaryCode',
+        'oneLetterKeyboard',
+        'higherLowerAge',
+        'higherLowerBirthDate',
+        'ageDropdown',
+        'mapZoom'
+        // add 'numbersByWords' here if you also want to block normal typing for that
+    ]);
+
+    Object.keys(window.assignedTypes).forEach(fieldId => {
+        const type = window.assignedTypes[fieldId];
+        if (!type || !blockTypingTypes.has(type.key)) return;
+
+        const input = gameFields[fieldId];
+        if (!input) return;
+
+        // For these types, we want: no native keyboard, but still focusable
+        input.readOnly = true;
+
+        // For some of these you already had readOnly set (e.g. mapZoom, ageDropdown, higher/lower)
+        // This just centralizes the logic so you don't miss scrambled/one-letter/etc.
+    });
+}
+
+// Run on page load
+assignRandomTypes();
+console.log('Assigned types:', JSON.stringify(window.assignedTypes, null, 2));
+applyMobileReadOnlyRules();
