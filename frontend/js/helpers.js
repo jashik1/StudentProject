@@ -69,6 +69,7 @@
                 const code = parseInt(chunk, 2);
                 result += String.fromCharCode(code);
             }
+            console.log('[binaryToText] raw:', binaryStr, 'decoded:', result);
             return result;
         }
         //Words to digits converter

@@ -1,5 +1,4 @@
 (function () {
-    // Get raw value from gameFields or direct by id
     function getRaw(fieldId) {
         if (window.gameFields && window.gameFields[fieldId]) {
             return window.gameFields[fieldId].value || '';
@@ -8,39 +7,52 @@
         return input ? input.value || '' : '';
     }
 
-    // Decode like your "decodedValues" in main.js (binary/morse)
+    function getType(fieldId) {
+        if (!window.assignedTypes) return null;
+        return window.assignedTypes[fieldId] || null;
+    }
+
     function getDecoded(fieldId) {
         const raw = getRaw(fieldId);
-        const type = window.assignedTypes && window.assignedTypes[fieldId];
+        const type = getType(fieldId);
+
+        console.log('[LiveDecode] field:', fieldId, 'type:', type ? type.key : '(none)', 'raw:', raw);
+
         if (!type) return raw;
 
         if (type.key === 'binaryCode') {
-            return binaryToText(raw);
+            const decoded = binaryToText(raw);
+            console.log('[LiveDecode] binary field:', fieldId, 'decoded:', decoded);
+            return decoded;
         }
         if (type.key === 'morseCode') {
-            return morseToText(raw);
+            const decoded = morseToText(raw);
+            console.log('[LiveDecode] morse field:', fieldId, 'decoded:', decoded);
+            return decoded;
         }
-        // other minigames (scrambledKeyboard, oldPhoneKeypad...) already produce normal text
         return raw;
     }
 
-    // Get the "final display" value like finalDisplayValues in main.js
     function getFinalValue(fieldId) {
-        const type = window.assignedTypes && window.assignedTypes[fieldId];
+        const type = getType(fieldId);
+        const raw = getRaw(fieldId);
 
         if (type && type.key === 'numbersByWords') {
-            return wordsToDigits(getRaw(fieldId));
+            const digits = wordsToDigits(raw);
+            console.log('[LiveDecode] numbersByWords ->', digits);
+            return digits;
         }
 
         if (type && type.key === 'ageDropdown') {
-            const num = ageWordsToNumber(getRaw(fieldId));
+            const num = ageWordsToNumber(raw);
+            console.log('[LiveDecode] ageDropdown ->', num);
             return (num !== null) ? String(num) : '';
         }
 
         return getDecoded(fieldId);
     }
 
-    window.getLiveRawValue = getRaw;
+    window.getLiveRawValue     = getRaw;
     window.getLiveDecodedValue = getDecoded;
-    window.getLiveFinalValue = getFinalValue;
+    window.getLiveFinalValue   = getFinalValue;
 })();

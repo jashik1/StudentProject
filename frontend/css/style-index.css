@@ -439,3 +439,12 @@ body::after {
     z-index: 320; 
     pointer-events: none;
 } */
+.falling-title .word {
+    display: inline-block;
+    white-space: nowrap; /* prevent breaking within a word */
+}
+
+/* Space between words; browser can wrap between them naturally */
+.falling-title .word + .word {
+    margin-left: 0.35em; /* adjust to taste */
+}

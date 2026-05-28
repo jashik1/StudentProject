@@ -24,7 +24,10 @@
     function isPreTaken(name) {
         return preTakenSet.has(name.toLowerCase());
     }
-
+    function isUsernameCharsValid(str) {
+        // Only ASCII letters, digits, and underscore
+        return /^[A-Za-z0-9_]+$/.test(str);
+    }
     // --- State ---
 
     // Usernames the player has gotten "taken" on (non-pre-taken ones)
@@ -169,9 +172,23 @@
             if (checkTimer) clearTimeout(checkTimer);
             checkTimer = setTimeout(function () {
                 const dec = tryDecodeUsername(raw);
-                    if (!dec.ok) { setStatus(dec.reason, 'error'); return; }
-                    const name = (dec.value || '').trim().toLowerCase();
-                    if (!name) { clearStatus(); return; }
+                if (!dec.ok) {
+                    setStatus(dec.reason, 'error');
+                    return;
+                }
+                const decoded = (dec.value || '').trim();
+                if (!decoded) {
+                    clearStatus();
+                    return;
+                }
+
+                // NEW: character validation — only letters, digits and underscores allowed
+                if (!isUsernameCharsValid(decoded)) {
+                    setStatus('Username can only contain letters, numbers, and underscores.', 'error');
+                    return;
+                }
+
+                const name = decoded.toLowerCase();
 
                 // Pre-taken: always "taken", doesn't count toward the 3
                 if (isPreTaken(name)) {
@@ -192,7 +209,7 @@
                 }
 
                 // Still need 3 "taken" results
-                    if (takenCount < 3) {
+                if (takenCount < 3) {
                     playerTakenNames.add(name);
                     takenCount++;
                     setStatus('✗ Username taken', 'error');

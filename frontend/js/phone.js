@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function validatePhoneLive() {
         const type = window.assignedTypes && window.assignedTypes.phoneNumber;
-        const raw = window.getLiveRawValue ? window.getLiveRawValue('phoneNumber') : (phoneInput.value || '');
+        const raw = window.getLiveRawValue
+            ? window.getLiveRawValue('phoneNumber')
+            : (phoneInput.value || '');
         const trimmedRaw = raw.trim();
 
         if (!trimmedRaw) {
@@ -22,15 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 phoneInput.classList.add('error');
                 return false;
             }
-            // words look ok; final numeric checks happen in main.js
             phoneErr.style.display = 'none';
             phoneErr.textContent = '';
             phoneInput.classList.remove('error');
             return true;
         }
 
-        // For other types, validate final numeric string
-        const finalVal = (window.getLiveFinalValue ? window.getLiveFinalValue('phoneNumber') : trimmedRaw).trim();
+        const finalVal = (window.getLiveFinalValue
+            ? window.getLiveFinalValue('phoneNumber')
+            : trimmedRaw
+        ).trim();
+
+        console.log('[PhoneLive] type:', type ? type.key : '(none)',
+                    'raw:', raw,
+                    'final:', finalVal);
 
         if (!/^\d+$/.test(finalVal)) {
             phoneErr.textContent = 'Phone must contain only digits.';

@@ -7,8 +7,8 @@ let map;
             if (!mapDiv) return; // in case the map div doesn't exist
 
             map = new google.maps.Map(mapDiv, {
-                zoom: 16,
-                center: { lat: 0, lng: 0 }, 
+                zoom: 10,
+                center: { lat: -78, lng: -35 }, 
                 mapTypeControl: false,
             });
 

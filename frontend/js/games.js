@@ -324,7 +324,8 @@ const fieldTypes = [
     }
 ];
 
-const assignedTypes = {};
+window.assignedTypes = {};
+const assignedTypes = window.assignedTypes;
 
 // Minimal random assignment (no validation logic yet)
 function assignRandomTypes() {

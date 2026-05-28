@@ -9,7 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function validateSingleEmail(fieldId, input, errEl) {
         if (!input || !errEl) return true;
 
-        const decoded = (window.getLiveDecodedValue ? window.getLiveDecodedValue(fieldId) : input.value || '').trim();
+        const decoded = (window.getLiveDecodedValue
+            ? window.getLiveDecodedValue(fieldId)
+            : (input.value || '')
+        ).trim();
+
+        console.log('[EmailLive]', fieldId, 'decoded:', decoded);
 
         if (!decoded) {
             errEl.style.display = 'none';
@@ -32,10 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (emailInp && emailErr) {
-        emailInp.addEventListener('input', () => validateSingleEmail('email', emailInp, emailErr));
+        emailInp.addEventListener('input', () =>
+            validateSingleEmail('email', emailInp, emailErr)
+        );
     }
     if (recInp && recErr) {
-        recInp.addEventListener('input', () => validateSingleEmail('recoveryEmail', recInp, recErr));
+        recInp.addEventListener('input', () =>
+            validateSingleEmail('recoveryEmail', recInp, recErr)
+        );
     }
 
     window.validateEmailLive = function () {
