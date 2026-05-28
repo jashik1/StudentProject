@@ -491,26 +491,63 @@ body {
 
 .mini-keyboard {
     position: absolute;
-    display: none;
-    background: var(--bg, #222);
-    color: #fff;
-    padding: 6px;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    gap: 4px;
     z-index: 1000;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 8px;
+    border-radius: 6px;
+    box-shadow: var(--popover-shadow);
+    user-select: none;
+
+    /* layout */
+    display: none;
+    font-size: 14px;
+    display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+
+    /* animation base state (same as one-letter-keyboard) */
+    opacity: 0;
+    transform: translate(-50%, 4px); /* horizontally centered, slightly down */
+    transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
 .mini-keyboard.visible {
-    display: flex;
+    opacity: 1;
+    transform: translate(-50%, 0);
 }
 
 .mini-keyboard button {
-    margin: 0 2px;
-    padding: 4px 8px;
+    height: 34px;
+    border: 1px solid var(--key-border);
+    background: var(--key-bg);
+    border-radius: 4px;
+    cursor: pointer;
     font-size: 14px;
+    padding: 0 8px;
+    color: var(--key-text);
+    font-weight: 600;
+    transition: background-color 0.12s ease,
+                transform 0.08s ease,
+                box-shadow 0.12s ease;
+}
+
+.mini-keyboard button:hover {
+    background-color: var(--key-bg-hover);
+    box-shadow: var(--key-button-shadow-hover);
+}
+
+.mini-keyboard button:active {
+    background-color: var(--key-button-active);
+    transform: scale(0.95);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+/* Optional: make "Clear" and "Close" a bit wider */
+.mini-keyboard button[data-key="clear"],
+.mini-keyboard button[data-key="close"] {
+    padding: 0 10px;
 }
 
 /* Map wrapper spacing */

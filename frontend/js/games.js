@@ -13,7 +13,9 @@ const gameFields = {
     confirmPassword: document.getElementById('confirmPassword')
     // ^^ deprecated, we have confirmPassword1–9 now
 };
-const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isMobile =
+    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    window.innerWidth <= 768;
 // Define confirm password segments and their available types
 const confirmPasswordSegments = [
     { fields: [1], typeKey: null },      // Segment 1: fields 1-3
@@ -850,7 +852,9 @@ function assignRandomTypes() {
         // --- Mobile binary/morse keyboards ---
 
         (function () {
-            const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isMobile =
+                /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                window.innerWidth <= 768;
 
             if (!isMobile) return; // only do this on mobile
 
@@ -945,6 +949,10 @@ function assignRandomTypes() {
                     hideWidget(currentWidget);
                     currentInput.blur();
                     return;
+                }
+
+                    if (key === 'space') {
+                    key = ' ';
                 }
 
                 // normal character
