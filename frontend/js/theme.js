@@ -1,6 +1,6 @@
 (function () {
     const storageKey = 'ikbw_theme';
-    const root = document.body;
+    const root = document.documentElement;
 
     function getStoredTheme() {
         try {
