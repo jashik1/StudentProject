@@ -436,7 +436,7 @@ function applyTypeForField(fieldId, chosenType, input) {
                 };
 
                 input.setAttribute('inputmode', 'numeric');
-                input.setAttribute('pattern', '[0-9]*');
+  
 
                 let lastKey = null;
                 let lastTime = 0;
