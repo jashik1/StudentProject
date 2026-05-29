@@ -595,3 +595,40 @@ body {
     margin-top: 4px;
     display: none;
 }
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%;
+        margin: 20px 12px;
+        padding: 16px 16px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    label {
+        font-size: 13px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"] {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .confirm-content {
+        max-width: 360px;
+        width: 80%;
+    }
+
+    .theme-toggle {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        z-index: 1100;
+    }
+}
