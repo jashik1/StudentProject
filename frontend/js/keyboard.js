@@ -43,6 +43,7 @@ const keyAmount = 20;
 
         // mainRow: grid of 10 random characters
         const mainRow = document.createElement('div');
+        mainRow.className = 'sk-main-row';
         mainRow.style.display = 'grid';
         mainRow.style.gridTemplateColumns = 'repeat(10, 36px)';
         mainRow.style.gap = '6px';
@@ -50,6 +51,7 @@ const keyAmount = 20;
 
         // controlRow: single row of control buttons
         const controlRow = document.createElement('div');
+        controlRow.className = 'sk-control-row';
         controlRow.style.display = 'grid';
         controlRow.style.gridTemplateColumns = 'repeat(5, auto)';
         controlRow.style.gap = '6px';

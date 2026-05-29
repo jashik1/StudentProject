@@ -4,6 +4,7 @@ const confirmPasswordInputs = {
     3: document.getElementById('confirmPassword3')
 };
 
+
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
         console.log('confirmPassword.js loaded');
@@ -28,9 +29,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (typeKey === 'binaryCode') {
                     input.placeholder = 'Enter text using Binary code (0 and 1 only)';
                     input.classList.add('type-binary-code');
-                    input.addEventListener('keydown', function (e) {
-                        if (['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(e.key)) return;
-                        if (e.key !== '0' && e.key !== '1') e.preventDefault();
+
+                    if (isMobile && window.attachBinaryKeyboard) {
+                        // mobile: use custom mini-keyboard and readOnly
+                        window.attachBinaryKeyboard(input);
+                    } else {
+                        // desktop: restrict keys but let physical keyboard
+                        input.addEventListener('keydown', function (e) {
+                            if (['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'].includes(e.key)) return;
+                            if (e.key !== '0' && e.key !== '1') e.preventDefault();
+                        });
+                    }
+
+                    // in both cases, block paste
+                    input.addEventListener('paste', function (e) {
+                        e.preventDefault();
                     });
                 } else if (typeKey === 'oldPhoneKeypad') {
                     input.placeholder = 'Use your number keypad to write (1 = !?.,1, 2 = abc2, 3 = def3 ... 0 = space0)';
@@ -80,14 +93,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (typeKey === 'morseCode') {
                     input.placeholder = 'Enter text using Morse code (. and - only)';
                     input.classList.add('type-morse-code');
-                    input.addEventListener('keydown', function (e) {
-                        const allowedCtrl = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Home', 'End'];
-                        if (allowedCtrl.includes(e.key)) return;
-                        if (e.ctrlKey || e.metaKey || e.altKey) return;
-                        if (e.key === '.' || e.key === '-' || e.key === ' ') return;
-                        e.preventDefault();
-                    });
-                    input.addEventListener('paste', function (e) { e.preventDefault(); });
+
+                    if (isMobile && window.attachMorseKeyboard) {
+                        // mobile: custom dot/dash keyboard
+                        window.attachMorseKeyboard(input);
+                    } else {
+                        // desktop: restrict keys directly
+                        input.addEventListener('keydown', function (e) {
+                            const allowedCtrl = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Home', 'End'];
+                            if (allowedCtrl.includes(e.key)) return;
+                            if (e.ctrlKey || e.metaKey || e.altKey) return;
+                            if (e.key === '.' || e.key === '-' || e.key === ' ') return;
+                            e.preventDefault();
+                        });
+                        input.addEventListener('paste', function (e) { e.preventDefault(); });
+                    }
                 }
             });
         });

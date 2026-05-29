@@ -671,10 +671,12 @@ function applyTypeForField(fieldId, chosenType, input) {
                 const btnRight = document.getElementById('olk-right');
                 const btnOk = document.getElementById('olk-ok');
                 const btnShift = document.getElementById('olk-shift');
+                const btnClose = document.getElementById('olk-close');
+                const btnBackspace = document.getElementById('olk-backspace');
                 const letterSpan = document.getElementById('olk-letter');
                 const container = document.querySelector('.container');
 
-                if (!widget || !btnLeft || !btnRight || !btnOk || !btnShift || !letterSpan || !container) {
+                if (!widget || !btnLeft || !btnRight || !btnOk || !btnShift || !btnBackspace || !btnClose || !letterSpan || !container) {
                     console.error('One-letter keyboard elements missing');
                 } else {
                     // Base layout (unshifted)
@@ -685,7 +687,7 @@ function applyTypeForField(fieldId, chosenType, input) {
 
                     let index = 0;
                     let currentInput = null;
-                    let shiftOn = false; // shift state
+                    let shiftOn = false;
 
                     function currentChar() {
                         const arr = shiftOn ? shiftChars : baseChars;
@@ -736,7 +738,7 @@ function applyTypeForField(fieldId, chosenType, input) {
                     window.hideOneLetterKeyboard = hideWidget;
 
                     // avoid unfocusing the input on button clicks
-                    [btnLeft, btnRight, btnOk, btnShift].forEach(btn => {
+                    [btnLeft, btnRight, btnOk, btnShift, btnBackspace, btnClose].forEach(btn => {
                         btn.addEventListener('mousedown', (e) => {
                             e.preventDefault(); // prevent focus change
                         });
@@ -782,6 +784,39 @@ function applyTypeForField(fieldId, chosenType, input) {
                         currentInput.setSelectionRange(newPos, newPos);
                         currentInput.dispatchEvent(new Event('input', { bubbles: true }));
                         currentInput.focus();
+                    });
+
+                    // Backspace: remove one character before the caret (or selection)
+                    btnBackspace.addEventListener('click', () => {
+                        if (!currentInput) return;
+                        const start = currentInput.selectionStart ?? currentInput.value.length;
+                        const end = currentInput.selectionEnd ?? currentInput.value.length;
+
+                        if (start === end && start > 0) {
+                            currentInput.value =
+                                currentInput.value.slice(0, start - 1) +
+                                currentInput.value.slice(end);
+                            const newPos = start - 1;
+                            currentInput.setSelectionRange(newPos, newPos);
+                        } else {
+                            currentInput.value =
+                                currentInput.value.slice(0, start) +
+                                currentInput.value.slice(end);
+                            currentInput.setSelectionRange(start, start);
+                        }
+
+                        currentInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        currentInput.focus();
+                    });
+
+                    // Close: hide widget and clear input (optional)
+                    btnClose.addEventListener('click', () => {
+                        if (window.hideOneLetterKeyboard) {
+                            window.hideOneLetterKeyboard();
+                        }
+                        if (currentInput) {
+                            currentInput.blur();
+                        }
                     });
 
                     // reposition widget on window resize

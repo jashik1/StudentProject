@@ -631,4 +631,23 @@ body {
         left: 4px;
         z-index: 1100;
     }
+
+    .scrambled-keyboard {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+        max-width: 95vw;      /* keep within viewport width */
+        box-sizing: border-box;
+        padding: 6px;
+    }
+
+    .scrambled-keyboard button {
+        flex: 0 0 calc(33.33% - 8px);  /* ~3 buttons per row */
+        box-sizing: border-box;
+        text-align: center;
+        padding: 4px 0;
+        font-size: 13px;
+        height: 32px;
+    }
 }
