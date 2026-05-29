@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        (function () {
+            const storageKey = 'ikbw_theme';
+            const root = document.documentElement;
+            try {
+                const stored = localStorage.getItem(storageKey);
+                if (stored === 'dark') {
+                    root.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) { }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <button id="themeToggle" class="theme-toggle" title="Toggle light/dark">☾</button>
+        <h1>Create account</h1>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input id="firstName" name="first name" type="text" class="focus-placeholder game-field"
+                    placeholder="Enter your first name" required>
+                <div class="confirm-error" id="firstName-error"></div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input id="lastName" name="last name" type="text" class="focus-placeholder game-field"
+                    placeholder="Enter your last name" required>
+                <div class="confirm-error" id="lastName-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" class="focus-placeholder game-field"
+                    placeholder="Enter your username" required>
+                <div id="username-error" class="username-error"></div>
+                <div id="username-good" class="username-good"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="text" class="focus-placeholder game-field"
+                    placeholder="example@mail.com">
+                <div id="email-error" class="confirm-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="recoveryEmail">Recovery Email</label>
+                <input id="recoveryEmail" name="recovery email" type="text" class="focus-placeholder game-field"
+                    placeholder="example@mail.com">
+                <div id="recoveryEmail-error" class="confirm-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+
+                <div class="phone-wrapper">
+                    <span class="phone-prefix">+</span>
+                    <input id="phoneNumber" name="phoneNumber" type="text" class="focus-placeholder game-field"
+                        placeholder="Type in words (etc. one, two, ...)" required>
+                </div>
+                <div id="phoneNumber-error" class="confirm-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <input id="gender" name="gender" type="text" class="focus-placeholder game-field"
+                    placeholder="Enter your gender" required>
+                <div id="gender-error" class="confirm-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input id="address" name="address" type="text" class="focus-placeholder game-field"
+                    placeholder="Find your address on the map" required>
+                <div id="address-error" class="confirm-error"></div>
+                <!-- Map wrapper is hidden until mapZoom is assigned -->
+                <div id="address-map-wrapper" style="display:none;">
+                    <div id="map"></div>
+                    <div class="address-map-help">
+                        Zoom/click the map to find your place, then type the address.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="birthDate">Birth Date</label>
+                <input id="birthDate" name="birthDate" type="date" class="focus-placeholder game-field"
+                    placeholder="Select your birth date" required>
+
+                <div id="birth-hilo" class="birth-hilo" style="display:none;">
+                    <div class="hilo-buttons">
+                        <button type="button" id="birth-hilo-earlier">Earlier</button>
+                        <button type="button" id="birth-hilo-later">Later</button>
+                    </div>
+                    <div id="birth-hilo-message" class="hilo-message">
+                        Use Earlier / Later to pick your birth date.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input id="age" name="age" type="text" class="focus-placeholder game-field"
+                    placeholder="Spin the roulette to enter your age" required>
+
+                <div id="age-slot-machine" class="slot-machine" style="display: none;">
+                    <button type="button" id="slot-spin">SPIN</button>
+                    <div class="slot-message age-slot-message" id="slot-message">
+                        Spin to get your age
+                    </div>
+                </div>
+
+                <div id="age-hilo" class="age-hilo" style="display:none;">
+                    <div class="hilo-buttons">
+                        <button type="button" id="age-hilo-lower">Lower</button>
+                        <button type="button" id="age-hilo-higher">Higher</button>
+                    </div>
+                    <div id="age-hilo-message" class="hilo-message">
+                        Use Higher / Lower to get your age.
+                    </div>
+                </div>
+
+                <div class="age-dropdown-wrapper" id="age-dropdown-wrapper" style="display: none;">
+                    <div class="age-options" id="age-options-list"></div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" class="focus-placeholder game-field"
+                    placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword1">Confirm Password</label>
+                <input id="confirmPassword1" name="confirmPassword1" type="password"
+                    class="focus-placeholder game-field" placeholder="Confirm your password" required>
+                <div class="confirm-error" id="confirmPassword1-error"></div>
+            </div>
+
+            <div id="confirmPassword2-group" class="form-group" style="display: none;">
+                <label for="confirmPassword2">Confirm Password Again</label>
+                <input id="confirmPassword2" name="confirmPassword2" type="password"
+                    class="focus-placeholder game-field" placeholder="Confirm your password again" required>
+                <div class="confirm-error" id="confirmPassword2-error"></div>
+            </div>
+
+            <div id="confirmPassword3-group" class="form-group" style="display: none;">
+                <label for="confirmPassword3">Confirm Password One More Time</label>
+                <input id="confirmPassword3" name="confirmPassword3" type="password"
+                    class="focus-placeholder game-field" placeholder="Confirm your password again" required>
+                <div class="confirm-error" id="confirmPassword3-error"></div>
+            </div>
+
+            <div class="button-row">
+                <button type="submit">Continue</button>
+            </div>
+
+            <div class="small-text">
+                By registering, you agree to… whatever this is.
+            </div>
+
+            <div id="one-letter-keyboard" class="one-letter-keyboard" style="display:none;">
+                <button type="button" id="olk-backspace">Backspace</button>
+                <button id="olk-shift" type="button">Shift</button>
+                <button type="button" id="olk-left" class="olk-arrow">&lt;</button>
+                <span id="olk-letter" class="olk-letter">a</span>
+                <button type="button" id="olk-right" class="olk-arrow">&gt;</button>
+                <button type="button" id="olk-ok" class="olk-ok">OK</button>
+                <button type="button" id="olk-close" class="olk-close">Close</button>
+            </div>
+            <div id="binary-keyboard" class="mini-keyboard" style="display:none;">
+                <button type="button" data-key="backspace">Backspace</button>
+                <button type="button" data-key="space">Space</button>
+                <button type="button" data-key="0">0</button>
+                <button type="button" data-key="1">1</button>
+                <button type="button" data-key="clear">Clear</button>
+                <button type="button" data-key="close">Close</button>
+            </div>
+
+            <div id="morse-keyboard" class="mini-keyboard" style="display:none;">
+                <button type="button" data-key="backspace">Backspace</button>
+                <button type="button" data-key="space">Space</button>
+                <button type="button" data-key=".">.</button>
+                <button type="button" data-key="-">-</button>
+                <button type="button" data-key="clear">Clear</button>
+                <button type="button" data-key="close">Close</button>
+            </div>
+        </form>
+        <div id="confirmModal" class="confirm-modal" style="display: none;">
+            <div class="confirm-content">
+                <h2>Confirm your details</h2>
+                <div id="confirmSummary" class="confirm-summary"></div>
+                <div class="confirm-buttons">
+                    <button type="button" id="confirmBack">Go Back</button>
+                    <button type="button" id="confirmSubmit">Create account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/theme.js"></script>
+    <script src="js/google map.js"></script>
+    <script src="js/keyboard.js"></script>
+    <script src="js/helpers.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/LiveValidation.js"></script>
+    <script src="js/name.js"></script>
+    <script src="js/age.js"></script>
+    <script src="js/confirmPassword.js"></script>
+    <script src="js/username.js"></script>
+    <script src="js/gender.js"></script>
+    <script src="js/email.js"></script>
+    <script src="js/phone.js"></script>
+    <script src="js/address.js"></script>
+    <script src="js/main.js"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsQCKU1FdwqqyzbSGA_32HZkaIt0-qKoo&callback=initMap&v=weekly&libraries=marker"
+        defer></script>
+</body>

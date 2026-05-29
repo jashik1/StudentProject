@@ -1,0 +1,450 @@
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #000000;
+    --card-bg: #ffffff;
+    --card-border: #cccccc;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --input-focus-border: #4a90e2;
+    --input-focus-shadow: rgba(74,144,226,0.6);
+    --button-bg: rgb(16, 189, 247);
+    --button-bg-hover: #2aadf4;
+    --button-text: #000000;
+    --modal-backdrop: rgba(0,0,0,0.4);
+    --text-shadow: 3px 3px 0 rgb(173, 216, 230);
+    --error-text: #c62828;
+    --stripe-bg: #e0e0d7; /* pale beige main stripe (lighter) */
+    --stripe2-bg: #e8e7e0; /* slightly darker beige for secondary blocks */
+}
+/* #dbdbd2
+
+/* dark theme overrides */
+html[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #f2f2f2;
+    --card-bg: #1e1e1e;
+    --card-border: #444;
+    --input-bg: #1e1e1e;
+    --input-border: #555;
+    --input-focus-border: #8ab4ff;
+    --input-focus-shadow: rgba(138,180,255,0.6);
+    --button-bg: #3b82f6;
+    --button-bg-hover: #2563eb;
+    --button-text: #f9fafb;
+    --modal-backdrop: rgba(0,0,0,0.7);
+    --text-shadow: 3px 3px 0 rgb(82, 142, 220);
+    --error-text: #ef8080;
+    --stripe-bg: #2f2f2f; /* main stripe (lighter gray) */
+    --stripe2-bg: #3a3a3a; /* slightly paler gray for secondary blocks */
+}
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--button-bg, rgb(16,189,247));
+    color: var(--button-text, #000);
+    font-size: 18px;
+    line-height: 32px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    transition: background-color 0.15s ease,
+                transform 0.1s ease,
+                box-shadow 0.15s ease;
+    z-index: 1100;
+}
+
+.theme-toggle:hover {
+    background-color: var(--button-bg-hover, #2aadf4);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.theme-toggle:active {
+    transform: scale(0.9);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-size: 60px;
+            color: var(--text-color);
+            text-shadow: var(--text-shadow);
+            user-select: none;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+        }
+
+        button {
+                padding: 10px 20px;
+                font-size: 14px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                background-color: var(--button-bg);
+                color: var(--button-text);
+                transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            }
+
+            button:hover {
+                background-color: var(--button-bg-hover);
+                transform: translateY(-1px);
+                box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            }
+
+            button:active {
+                transform: translateY(0);
+                box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            }
+
+        .falling-title span {
+            display: inline-block;
+        }
+                .falling-title span { display: inline-block; }
+                .falling-title {
+                    letter-spacing: -8px;
+                    display: inline-block;
+                    /* fix to viewport so JS center matches CSS center */
+                    position: fixed;
+                    top: 40px;
+                    left: 50%;
+                    transform: translate(-50%, 0);
+                    transform-origin: center;
+                    will-change: transform;
+                    z-index: 400;
+                }
+        .l1 { transform: rotate(0deg); }
+        .l2 { transform: rotate(-5deg); }
+        .l3 { transform: rotate(0deg); }
+        .l4 { transform: rotate(0deg); }
+        .l5 { transform: rotate(5deg); }
+        .l6 { transform: rotate(23deg); }
+        .l7 { transform: rotate(0deg); }
+        .l8 { transform: rotate(-6deg); }
+        .l9 { transform: rotate(0deg); }
+        .l10 { transform: rotate(7deg); }
+        .l11 { transform: rotate(-17deg); }
+        .l12 { transform: rotate(0deg); }
+        .l13 { transform: rotate(-14deg); }
+        .l14 { transform: rotate(11deg); }
+        .l15 { transform: rotate(3deg); }
+        .l16 { transform: rotate(-6deg); }
+        .l17 { transform: rotate(19deg); }
+
+        #registerButton {
+            /* centered in viewport; JS will apply small repelling offsets */
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 12px 24px;
+            font-size: 16px;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            overflow: hidden;
+            z-index: 350;
+            will-change: transform;
+        }
+
+        #registerButton .falling-button-text {
+            display: inline-block;
+        }
+
+        #registerButton .falling-button-text span {
+            display: inline-block;
+        }
+
+        /* base tilt */
+        .t1  { transform: rotate(-5deg); }
+        .t2  { transform: rotate(3deg); }
+        .t3  { transform: rotate(-8deg); }
+        .t4  { transform: rotate(4deg); }
+
+        #registerButton:hover {
+            background-color: var(--button-bg-hover);
+        }
+
+        /* wave animation setup */
+        #registerButton .falling-button-text span {
+            animation-name: waveJump;
+            animation-duration: 0.4s;
+            animation-timing-function: ease-out;
+            animation-fill-mode: both;
+        }
+
+        /* staggered delays */
+        .d1  { animation-delay: 0s; }
+        .d2  { animation-delay: 0.05s; }
+        .d3  { animation-delay: 0.10s; }
+        .d4  { animation-delay: 0.15s; }
+
+        @keyframes waveJump {
+            0%   { transform: translateY(0); }
+            30%  { transform: translateY(-8px); }
+            60%  { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
+
+    .login-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-family: inherit;
+}
+
+.login-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--modal-backdrop);
+}
+
+.login-modal-content {
+    position: relative;
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 24px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    max-width: 360px; 
+    width: 85%;
+    z-index: 1;
+    text-align: left;
+}
+
+.login-modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.login-modal-content p {
+    font-size: 14px;
+}
+
+.login-field {
+    margin-bottom: 14px;
+}
+
+.login-field label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.login-field input {
+    width: 100%;
+    padding: 8px 10px;
+    color: var(--text-color);
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    background-color: var(--input-bg);
+}
+.login-field input:focus {
+    border-color: var(--input-focus-border);
+    outline: none;
+    box-shadow: 0 0 4px var(--input-focus-shadow);
+    background-color: var(--input-bg);
+}
+
+.login-error {
+    margin-top: 8px;
+    margin-bottom: 10px;
+    color: var(--error-text);
+}
+
+.login-buttons {
+    margin-top: 4px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+
+.login-buttons button {
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+.login-error {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--error-text);
+}
+
+.login-register-text {
+    margin-top: 12px;
+    margin-bottom: 0;
+    font-size: 13px;
+    text-align: center;
+}
+
+.login-register-text span {
+    text-decoration: underline;
+    color: #0077cc;
+    cursor: pointer;
+}
+.login-register-text span:hover {
+    color: #005999;
+}
+.login-register-bottom {
+    margin-bottom: 0;
+}
+/* INFO BUTTON */
+.info-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    font-size: 18px;
+    line-height: 32px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    z-index: 1100;
+    font-family: "Awesome Font", serif;
+}
+
+.info-button:hover {
+    background-color: var(--button-bg-hover);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    transform: translateY(-1px);
+}
+
+.info-button:active {
+    transform: scale(0.9);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* spin/scale animation on click */
+.info-button.animate {
+    animation: infoSpin 0.3s ease-out;
+}
+
+@keyframes infoSpin {
+    0%   { transform: scale(1) rotate(0deg); }
+    50%  { transform: scale(1.1) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* INFO PANEL – small card next to button */
+.info-panel {
+    position: fixed;
+    top: 20px;
+    right: 52px; /* 32px button + ~8px gap + a bit extra */
+    display: none;     /* JS toggles */
+    z-index: 1090;     /* just below the button */
+}
+
+.info-panel-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 10px 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    max-width: 260px;
+    width: 260px;
+    text-align: left;
+    font-size: 13px;
+
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.info-panel.show .info-panel-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.info-panel-content h2 {
+    margin: 0 0 6px;
+    font-size: 15px;
+}
+
+.info-panel-content p {
+    margin: 2px 0 6px;
+}
+
+/* the background decorations, put back if u want ig but they r goofy*/
+/* body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(360px, 48vw, 1000px);
+    height: 100vh;
+    background: var(--stripe-bg);
+    z-index: 0; 
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: calc(50% - 140px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(220px, 32vw, 700px);
+    bottom: 0; 
+    background: var(--stripe2-bg);
+    border-radius: 14px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+#title-deco {
+    position: fixed;
+    left: 50%;
+    
+    top: -18px;
+    transform: translateX(-50%);
+    width: clamp(520px, 58vw, 980px);
+    height: clamp(200px, 28vh, 420px);
+    background: var(--stripe2-bg);
+    border-radius: 18px;
+    z-index: 320; 
+    pointer-events: none;
+} */
+.falling-title .word {
+    display: inline-block;
+    white-space: nowrap; /* prevent breaking within a word */
+}
+
+/* Space between words; browser can wrap between them naturally */
+.falling-title .word + .word {
+    margin-left: 0.35em; /* adjust to taste */
+}
